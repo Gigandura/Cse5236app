@@ -35,4 +35,10 @@ public class LoginFragment extends Fragment {
 
         return v;
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v("Login Fragment", "On Destroy View Method");
+    }
 }
