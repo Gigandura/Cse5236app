@@ -29,7 +29,8 @@ public class LoginFragment extends Fragment {
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //do something
+                //Check username and password then
+                //Go to main activity something
             }
         });
 
