@@ -2,12 +2,15 @@ package com.example.cse_5236_app.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.List;
+
 @IgnoreExtraProperties
 public class User {
 
     public String username;
     public String password;
 
+    public List<Movie> myList;
     public User() {
 
     }

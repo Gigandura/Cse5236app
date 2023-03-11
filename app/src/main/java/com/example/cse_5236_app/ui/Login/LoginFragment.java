@@ -116,10 +116,8 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_login_fail)
-                .setPositiveButton(R.string.dialog_ok_button, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // START THE GAME!
-                    }
+                .setPositiveButton(R.string.dialog_ok_button, (dialog, id) -> {
+                    // START THE GAME!
                 });
         // Create the AlertDialog object and return it
         return builder.create();
