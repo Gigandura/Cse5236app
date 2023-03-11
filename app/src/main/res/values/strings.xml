@@ -9,4 +9,6 @@
     <string name="login_button">Login</string>
     <string name="login_cancel">Cancel</string>
     <string name="login_new_user">New User</string>
+    <string name="dialog_login_fail">Your username or password is incorrect</string>
+    <string name="dialog_login_fail_title">Error!</string>
 </resources>

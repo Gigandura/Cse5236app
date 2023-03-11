@@ -12,13 +12,13 @@
         android:theme="@style/Theme.CSE_5236_App"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:label="@string/app_name">
 
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.Login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

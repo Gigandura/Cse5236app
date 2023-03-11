@@ -1,7 +1,8 @@
-package com.example.cse_5236_app;
+package com.example.cse_5236_app.ui;
 
 import android.os.Bundle;
 
+import com.example.cse_5236_app.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;

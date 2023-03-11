@@ -1,4 +1,4 @@
-package com.example.cse_5236_app;
+package com.example.cse_5236_app.ui.Login;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.cse_5236_app.R;
 import com.example.cse_5236_app.ui.Login.LoginFragment;
 
 public class LoginActivity extends AppCompatActivity {
