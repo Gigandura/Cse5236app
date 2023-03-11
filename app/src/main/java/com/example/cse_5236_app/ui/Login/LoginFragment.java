@@ -91,8 +91,8 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
             });
 
         } else if (v.getId() == R.id.new_user_button) {
-//            writeNewUser(username.getText().toString(), username.getText().toString()
-//                    , password.getText().toString());
+            writeNewUser(username.getText().toString(), username.getText().toString()
+                    , password.getText().toString());
         } else {
             Log.e("Login Fragment", "Bad button input");
         }
@@ -116,7 +116,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_login_fail)
-                .setPositiveButton(R.string.dialog_login_fail_title, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialog_ok_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // START THE GAME!
                     }

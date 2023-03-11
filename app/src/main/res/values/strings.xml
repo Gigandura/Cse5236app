@@ -11,4 +11,5 @@
     <string name="login_new_user">New User</string>
     <string name="dialog_login_fail">Your username or password is incorrect</string>
     <string name="dialog_login_fail_title">Error!</string>
+    <string name="dialog_ok_button">OK</string>
 </resources>
