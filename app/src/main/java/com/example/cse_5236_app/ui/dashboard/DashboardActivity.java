@@ -1,86 +1,126 @@
 package com.example.cse_5236_app.ui.dashboard;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.Button;
 
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 
 import com.example.cse_5236_app.R;
-import com.example.cse_5236_app.model.SearchApi;
+import com.example.cse_5236_app.model.Movie;
+import com.example.cse_5236_app.request.RequestManager;
+import com.example.cse_5236_app.response.MovieSearchResponse;
+import com.example.cse_5236_app.util.Permissions;
 
-public class DashboardActivity extends AppCompatActivity implements OnMovieClickListener{
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-    SearchView search_view;
-    RecyclerView recycler_view_home;
-    SearchRecyclerAdapter adapter;
-    RequestManager manager;
-    ProgressDialog dialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class DashboardActivity extends AppCompatActivity /*implements OnMovieClickListener*/{
+
+    Button btn;
+
+    private DashboardViewModel dashboardViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
-        Log.v("DashboardActivity", "DashboardActivity onCreate");
-        search_view = findViewById(R.id.search_view);
-        recycler_view_home = findViewById(R.id.recycler_view_home);
-        manager = new RequestManager(this);
-        dialog = new ProgressDialog(this);
+        btn = findViewById(R.id.button);
 
-        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Log.v("DashboardActivity", "DashboardActivity onQueryTextSubmit");
-                dialog.setTitle("Searching...");
-                dialog.show();
-                manager.searchMovies(listener, query);
-                return true;
-            }
 
+        dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
+
+
+
+
+
+    }
+
+    private void ObserveAnyChange() {
+
+        dashboardViewModel.getMovies().observe(this, new Observer<List<Movie>>() {
             @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
+            public void onChanged(List<Movie> movies) {
+
+
+
             }
         });
 
     }
+    private void GetRetrofitResponse() {
+        MovieApi movieApi = RequestManager.getMovieApi();
 
+        Call<MovieSearchResponse> responseCall = movieApi.searchMovie(
+                Permissions.API_KEY,
+                "Avenger",
+                1);
 
-    private final OnSearchListener listener = new OnSearchListener() {
-        @Override
-        public void onResponse(SearchApi response) {
-            dialog.dismiss();
-            if (response == null) {
-                Toast.makeText(DashboardActivity.this, "No data", Toast.LENGTH_SHORT).show();
-                return;
+        responseCall.enqueue(new Callback<MovieSearchResponse>() {
+            @Override
+            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+                if (response.code() == 200) {
+                    Log.v("DashboardActivity", "Response: " + response.body().toString());
+                    List<Movie> movies = new ArrayList<>(response.body().getMovies());
+
+                    for (Movie movie : movies) {
+                        Log.v("DashboardActivity", "Title: " + movie.getTitle());
+                    }
+                } else {
+                    try {
+                        Log.v("DashboardActivity", "error" + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-            showResult(response);
-        }
 
-        @Override
-        public void onError(String message) {
-            dialog.dismiss();
-            Toast.makeText(DashboardActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
 
-        }
-    };
-
-    private void showResult(SearchApi response) {
-        recycler_view_home.setHasFixedSize(true);
-        recycler_view_home.setLayoutManager(new GridLayoutManager(DashboardActivity.this, 1));
-        Log.v("DashboardActivity", response.toString());
-        adapter = new SearchRecyclerAdapter(this, response.getMovieList(), this);
-        recycler_view_home.setAdapter(adapter);
+            }
+        });
     }
 
-    @Override
-    public void onMovieClicked(String id) {
-        Toast.makeText(DashboardActivity.this, id, Toast.LENGTH_SHORT).show();
+    private void GetRetrofitResponseByID() {
+        MovieApi movieApi = RequestManager.getMovieApi();
+
+        Call<Movie> responseCall = movieApi.getMovie(
+                343611,
+                Permissions.API_KEY);
+
+        responseCall.enqueue(new Callback<Movie>() {
+            @Override
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
+                if (response.code() == 200) {
+                    Movie movie = response.body();
+                    Log.v("DashboardActivity", "Movie id response: " + movie.getTitle());
+                } else {
+                    try {
+                        Log.v("DashboardActivity", "error" + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Movie> call, Throwable t) {
+
+            }
+
+
+        });
     }
+
+
 }
