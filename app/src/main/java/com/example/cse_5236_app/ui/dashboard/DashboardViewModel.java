@@ -20,4 +20,8 @@ public class DashboardViewModel extends ViewModel {
     public LiveData<List<Movie>> getMovies() {
         return movieRepository.getMovies();
     }
+
+    public void searchMovieApi(String query, int pageNumber) {
+        movieRepository.searchMovieApi(query, pageNumber);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.cse_5236_app.ui.dashboard;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 
@@ -24,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DashboardActivity extends AppCompatActivity /*implements OnMovieClickListener*/{
+public class DashboardActivity extends AppCompatActivity {
 
     Button btn;
 
@@ -39,7 +40,14 @@ public class DashboardActivity extends AppCompatActivity /*implements OnMovieCli
 
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
 
+        ObserveAnyChange();
 
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchMovieApi("Fast", 1);
+            }
+        });
 
 
 
@@ -51,13 +59,26 @@ public class DashboardActivity extends AppCompatActivity /*implements OnMovieCli
             @Override
             public void onChanged(List<Movie> movies) {
 
-
+                if (movies != null) {
+                    for (Movie movie : movies) {
+                        Log.v("DashboardActivity", "onChanged: " + movie.getTitle());
+                    }
+                }
 
             }
         });
 
     }
-    private void GetRetrofitResponse() {
+
+    private void searchMovieApi(String query, int pageNumber) {
+        dashboardViewModel.searchMovieApi(query, pageNumber);
+    }
+
+
+
+
+
+    /*private void GetRetrofitResponse() {
         MovieApi movieApi = RequestManager.getMovieApi();
 
         Call<MovieSearchResponse> responseCall = movieApi.searchMovie(
@@ -120,7 +141,7 @@ public class DashboardActivity extends AppCompatActivity /*implements OnMovieCli
 
 
         });
-    }
+    } */
 
 
 }
