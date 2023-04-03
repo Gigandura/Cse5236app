@@ -1,10 +1,8 @@
 package com.example.cse_5236_app.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,17 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cse_5236_app.R;
 import com.example.cse_5236_app.model.Movie;
-import com.example.cse_5236_app.request.RequestManager;
-import com.example.cse_5236_app.response.MovieSearchResponse;
-import com.example.cse_5236_app.util.Permissions;
+import com.example.cse_5236_app.ui.details.MovieDetailsActivity;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class DashboardActivity extends AppCompatActivity implements OnClickMovieListener{
 
@@ -96,7 +86,11 @@ public class DashboardActivity extends AppCompatActivity implements OnClickMovie
     }
     @Override
     public void onMovieClick(int pos) {
-        //Toast.makeText(this, "Position: " + pos, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, MovieDetailsActivity.class);
+        intent.putExtra("movie", adapter.getSelectedMovie(pos));
+        startActivity(intent);
+
     }
 
     @Override

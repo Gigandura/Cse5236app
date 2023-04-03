@@ -70,14 +70,14 @@
             </LinearLayout>
 
             <RatingBar
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:numStars="5"
                 android:id="@+id/movie_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:isIndicator="true"/>
+                android:isIndicator="true"
+                android:numStars="5" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

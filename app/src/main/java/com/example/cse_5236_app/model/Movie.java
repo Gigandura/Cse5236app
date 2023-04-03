@@ -16,7 +16,7 @@ public class Movie implements Parcelable {
         this.release_date = release_date;
         this.movie_id = movie_id;
         this.vote_average = vote_average;
-        this.movie_overview = movie_overview;
+        this.overview = movie_overview;
         this.original_language = original_language;
     }
 
@@ -26,7 +26,7 @@ public class Movie implements Parcelable {
         release_date = in.readString();
         movie_id = in.readInt();
         vote_average = in.readFloat();
-        movie_overview = in.readString();
+        overview = in.readString();
         original_language = in.readString();
     }
 
@@ -55,7 +55,7 @@ public class Movie implements Parcelable {
         parcel.writeString(release_date);
         parcel.writeInt(movie_id);
         parcel.writeFloat(vote_average);
-        parcel.writeString(movie_overview);
+        parcel.writeString(overview);
         parcel.writeString(original_language);
 
     }
@@ -83,7 +83,7 @@ public class Movie implements Parcelable {
     }
 
     public String getMovie_overview() {
-        return movie_overview;
+        return overview;
     }
 
     public String getOriginal_language() {
@@ -95,7 +95,7 @@ public class Movie implements Parcelable {
     private String release_date;
     private int movie_id;
     private float vote_average;
-    private String movie_overview;
+    private String overview;
 
     private String original_language;
 
@@ -107,7 +107,7 @@ public class Movie implements Parcelable {
                 ", release_date='" + release_date + '\'' +
                 ", movie_id=" + movie_id +
                 ", vote_average=" + vote_average +
-                ", movie_overview='" + movie_overview + '\'' +
+                ", movie_overview='" + overview + '\'' +
                 ", original_language='" + original_language + '\'' +
                 '}';
     }
