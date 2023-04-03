@@ -27,7 +27,6 @@
         android:layout_marginEnd="280dp"
         android:text="@string/User_profile_description"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_notifications" />
@@ -45,13 +44,13 @@
         tools:src="@tools:sample/avatars[2]" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/userDesc"
         android:layout_width="382dp"
         android:layout_height="263dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="TextView"
+        android:text="@string/error_loading_data"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,30 +61,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
         android:text="@string/del_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/change_button"
+        app:layout_constraintBottom_toTopOf="@+id/change_pic_button"
+        app:layout_constraintEnd_toStartOf="@+id/change_pass_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/userDesc" />
 
     <Button
-        android:id="@+id/change_button"
+        android:id="@+id/change_pass_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
         android:text="@string/change_pass_button"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/change_desc_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/del_button"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/userDesc" />
 
     <Button
         android:id="@+id/change_pic_button"
@@ -112,6 +105,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/change_pic_button"
-        app:layout_constraintTop_toBottomOf="@+id/change_button" />
+        app:layout_constraintTop_toBottomOf="@+id/change_pass_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

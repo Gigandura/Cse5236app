@@ -29,5 +29,9 @@
     <string name="change_pic_button">Change Picture</string>
     <string name="change_desc_button">Change Desc</string>
     <string name="profile_uri_default" tools:ignore="ExtraTranslation,TypographyDashes">https://firebasestorage.googleapis.com/v0/b/cse5236app.appspot.com/o/defaultimage.png?alt=media&amp;token=6544a665-4305-4679-871d-69a9ffc7a718</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_new_pass">Please enter a new password</string>
+    <string name="dialog_new_desc">Please enter a new description</string>
+    <string name="error_loading_data">There was an error loading your data</string>
 
 </resources>
