@@ -64,9 +64,8 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.navigation_home:
                         return true;
                     case R.id.navigation_notifications:
-                        startActivity(new Intent(getApplicationContext(), NotificationsFragment.class));
-                        overridePendingTransition(0,0);
-                        return true;
+                        View v = findViewById(R.id.nav_host_fragment_activity_main);
+                        Navigation.findNavController(v).navigate(R.id.navigation_notifications);
                 }
                 return false;
             }
