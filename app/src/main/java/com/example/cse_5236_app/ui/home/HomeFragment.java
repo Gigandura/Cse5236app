@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
         String[] testing = new String[2];
         testing[0] = "testing";
         testing[1] = "please work";
-
+        //Todo make this work for movies
         recyclerView = root.findViewById(R.id.postsRV);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
