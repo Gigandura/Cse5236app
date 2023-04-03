@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">CSE_5236_App</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Search</string>
@@ -23,5 +23,11 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="saved_username_key">username</string>
     <string name="preference_file_key">preferences</string>
+    <string name="User_profile_description">Description</string>
+    <string name="del_button">Delete Profile</string>
+    <string name="change_pass_button">Change Password</string>
+    <string name="change_pic_button">Change Picture</string>
+    <string name="change_desc_button">Change Desc</string>
+    <string name="profile_uri_default" tools:ignore="ExtraTranslation,TypographyDashes">https://firebasestorage.googleapis.com/v0/b/cse5236app.appspot.com/o/defaultimage.png?alt=media&amp;token=6544a665-4305-4679-871d-69a9ffc7a718</string>
 
 </resources>

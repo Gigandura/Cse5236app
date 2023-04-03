@@ -21,8 +21,8 @@ public class User {
 
     public String username;
     public String password;
-
     public List<Movie> myList;
+    public String image;
     public User() {
 
     }
@@ -31,6 +31,41 @@ public class User {
         this.username = username;
         this.password = password;
     }
+    public User(String username, String password, String Uri) {
+        this.username = username;
+        this.password = password;
+        this.image = Uri;
+    }
 
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Movie> getMyList() {
+        return myList;
+    }
+
+    public void setMyList(List<Movie> myList) {
+        this.myList = myList;
+    }
+
+    public String getImageUri() {
+        return image;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.image = imageUri;
+    }
 }
