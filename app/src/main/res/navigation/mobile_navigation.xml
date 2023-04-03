@@ -11,9 +11,9 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <activity
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.cse_5236_app.ui.dashboard.DashboardFragment"
+        android:name="com.example.cse_5236_app.ui.dashboard.DashboardActivity"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
