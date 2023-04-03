@@ -4,16 +4,24 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cse_5236_app.model.Movie;
+import com.example.cse_5236_app.repo.MovieRepository;
+
+import java.util.List;
+
 public class DashboardViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private MovieRepository movieRepository;
 
     public DashboardViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is dashboard fragment");
+        movieRepository = MovieRepository.getInstance();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public LiveData<List<Movie>> getMovies() {
+        return movieRepository.getMovies();
+    }
+
+    public void searchMovieApi(String query, int pageNumber) {
+        movieRepository.searchMovieApi(query, pageNumber);
     }
 }

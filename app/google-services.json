@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "827233743741",
+    "firebase_url": "https://cse5236app-default-rtdb.firebaseio.com",
+    "project_id": "cse5236app",
+    "storage_bucket": "cse5236app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:827233743741:android:e06712247f67db0bee5214",
+        "android_client_info": {
+          "package_name": "com.example.cse_5236_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "827233743741-edalhh3lvens0o2udl3luumsccumcnmm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkjuLtVoYZNV0C5hIemjJvKGZDUqpKAUA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "827233743741-edalhh3lvens0o2udl3luumsccumcnmm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
