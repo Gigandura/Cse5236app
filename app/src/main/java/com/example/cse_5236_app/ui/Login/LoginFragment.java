@@ -68,6 +68,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
             String usernameText = username.getText().toString();
             String passwordText = password.getText().toString();
             Intent intent = new Intent(v.getContext(), MainActivity.class);
+            intent.putExtra("userid", userId);
             mDatabase.child("users").child(userId).get().addOnCompleteListener(task -> {
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
@@ -75,7 +76,9 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                 else {
                     Log.d("firebase", String.valueOf(task.getResult().getValue()));
                     try {
+                        Log.v("LoginFragment", usernameText);
                         User testing = task.getResult().getValue(User.class);
+                        Log.v("LoginFragment", testing.username + " " + usernameText);
                         if (testing.username.equals(usernameText) && testing.password.equals(passwordText)) {
                             startActivity(intent);
                         } else {
