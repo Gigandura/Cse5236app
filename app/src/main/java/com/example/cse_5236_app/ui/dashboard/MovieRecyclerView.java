@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.cse_5236_app.R;
 import com.example.cse_5236_app.model.Movie;
 
@@ -17,6 +18,10 @@ public class MovieRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private List<Movie> mMovies;
     private OnClickMovieListener onClickMovieListener;
+
+    public MovieRecyclerView(OnClickMovieListener onClickMovieListener) {
+        this.onClickMovieListener = onClickMovieListener;
+    }
 
     @NonNull
     @Override
@@ -29,12 +34,28 @@ public class MovieRecyclerView extends RecyclerView.Adapter<RecyclerView.ViewHol
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         ((MovieViewHolder) holder).title.setText(mMovies.get(position).getTitle());
-        ((MovieViewHolder) holder).category.setText(mMovies.get(position).get());
-        ((MovieViewHolder) holder).length.setText(mMovies.get(position).get());
+        // change to caregory vvvvv
+        ((MovieViewHolder) holder).release_date.setText("Released: " + mMovies.get(position).getRelease_date());
+        ((MovieViewHolder) holder).length.setText("Language: " +  mMovies.get(position).getOriginal_language());
+        // Note: rating is out of 10 in api, we want out of 5
+        ((MovieViewHolder) holder).rating.setRating((mMovies.get(position).getVote_average())/2);
+
+        Glide.with(holder.itemView.getContext())
+                .load("https://image.tmdb.org/t/p/w500/" + mMovies.get(position).getPoster_path())
+                .into(((MovieViewHolder)holder).image);
     }
 
     @Override
     public int getItemCount() {
+        if (mMovies != null) {
+            return mMovies.size();
+        }
         return 0;
+
+    }
+
+    public void setmMovies(List<Movie> mMovies) {
+        this.mMovies = mMovies;
+        notifyDataSetChanged();
     }
 }

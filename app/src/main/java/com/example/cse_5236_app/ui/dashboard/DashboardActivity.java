@@ -4,11 +4,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.cse_5236_app.R;
@@ -25,29 +29,42 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements OnClickMovieListener{
 
-    Button btn;
+    private RecyclerView recyclerView;
 
+    private MovieRecyclerView adapter;
     private DashboardViewModel dashboardViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_dashboard);
-        btn = findViewById(R.id.button);
-
+        recyclerView = findViewById(R.id.recyclerView);
 
         dashboardViewModel = new ViewModelProvider(this).get(DashboardViewModel.class);
 
+        ConfigureRecyclerView();
+
         ObserveAnyChange();
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        SearchView searchView = findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View view) {
-                searchMovieApi("Fast", 1);
+            public boolean onQueryTextSubmit(String query) {
+                dashboardViewModel.searchMovieApi(
+                        query,
+                        1
+                );
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
+
 
 
 
@@ -62,6 +79,8 @@ public class DashboardActivity extends AppCompatActivity {
                 if (movies != null) {
                     for (Movie movie : movies) {
                         Log.v("DashboardActivity", "onChanged: " + movie.getTitle());
+
+                        adapter.setmMovies(movies);
                     }
                 }
 
@@ -70,11 +89,20 @@ public class DashboardActivity extends AppCompatActivity {
 
     }
 
-    private void searchMovieApi(String query, int pageNumber) {
-        dashboardViewModel.searchMovieApi(query, pageNumber);
+    private void ConfigureRecyclerView() {
+        adapter = new MovieRecyclerView(this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+    @Override
+    public void onMovieClick(int pos) {
+        //Toast.makeText(this, "Position: " + pos, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onCategoryClick(String category) {
 
+    }
 
 
 

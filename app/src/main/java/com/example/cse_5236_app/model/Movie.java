@@ -10,13 +10,14 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class Movie implements Parcelable {
 
-    public Movie(String title, String poster_path, String release_date, int movie_id, float vote_average, String movie_overview) {
+    public Movie(String title, String poster_path, String release_date, int movie_id, float vote_average, String movie_overview, String original_language) {
         this.title = title;
         this.poster_path = poster_path;
         this.release_date = release_date;
         this.movie_id = movie_id;
         this.vote_average = vote_average;
         this.movie_overview = movie_overview;
+        this.original_language = original_language;
     }
 
     protected Movie(Parcel in) {
@@ -26,6 +27,7 @@ public class Movie implements Parcelable {
         movie_id = in.readInt();
         vote_average = in.readFloat();
         movie_overview = in.readString();
+        original_language = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -47,6 +49,14 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
+
+        parcel.writeString(title);
+        parcel.writeString(poster_path);
+        parcel.writeString(release_date);
+        parcel.writeInt(movie_id);
+        parcel.writeFloat(vote_average);
+        parcel.writeString(movie_overview);
+        parcel.writeString(original_language);
 
     }
 
@@ -76,6 +86,10 @@ public class Movie implements Parcelable {
         return movie_overview;
     }
 
+    public String getOriginal_language() {
+        return original_language;
+    }
+
     private String title;
     private String poster_path;
     private String release_date;
@@ -83,5 +97,18 @@ public class Movie implements Parcelable {
     private float vote_average;
     private String movie_overview;
 
+    private String original_language;
 
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "title='" + title + '\'' +
+                ", poster_path='" + poster_path + '\'' +
+                ", release_date='" + release_date + '\'' +
+                ", movie_id=" + movie_id +
+                ", vote_average=" + vote_average +
+                ", movie_overview='" + movie_overview + '\'' +
+                ", original_language='" + original_language + '\'' +
+                '}';
+    }
 }
