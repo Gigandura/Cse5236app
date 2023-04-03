@@ -2,8 +2,10 @@ package com.example.cse_5236_app.ui.Login;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cse_5236_app.model.User;
 import com.example.cse_5236_app.ui.MainActivity;
@@ -54,10 +57,10 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         password = v.findViewById(R.id.password_text);
 
         Button login = (Button) v.findViewById(R.id.login_button);
-        Button newuser = (Button) v.findViewById(R.id.new_user_button);
+        Button newuserb = (Button) v.findViewById(R.id.new_user_button);
 
         login.setOnClickListener(this);
-        newuser.setOnClickListener(this);
+        newuserb.setOnClickListener(this);
         return v;
     }
 
@@ -77,9 +80,15 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                     try {
                         User testing = task.getResult().getValue(User.class);
                         if (testing.username.equals(usernameText) && testing.password.equals(passwordText)) {
+                            // Correct username and password path
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString(getString(R.string.saved_username_key), usernameText);
+                            editor.apply();
+                            Log.v("Login Fragment", "Written to shared storage");
                             startActivity(intent);
                         } else {
-                            Log.v("Login Fragment", "Here");
+                            // Wrong username or password path
                             DialogFragment newFragment = new LoginFragment();
                             newFragment.show(getActivity().getSupportFragmentManager(), "Login Fragment");
                         }
@@ -111,13 +120,14 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         mDatabase.child("users").child(userId).setValue(user);
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.dialog_login_fail)
                 .setPositiveButton(R.string.dialog_ok_button, (dialog, id) -> {
-                    // START THE GAME!
+                    //close the window
                 });
         // Create the AlertDialog object and return it
         return builder.create();

@@ -1,6 +1,9 @@
 package com.example.cse_5236_app.ui.notifications;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cse_5236_app.R;
 import com.example.cse_5236_app.databinding.FragmentNotificationsBinding;
 
 public class NotificationsFragment extends Fragment {
@@ -23,9 +27,16 @@ public class NotificationsFragment extends Fragment {
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        Log.v("Notification Fragment", "OnCreateView");
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String defaultUsername = "Error";
+        String username = sharedPref.getString(getString(R.string.saved_username_key), defaultUsername);
+        Log.v("Notification Fragment", username);
+
 
         final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+//        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        textView.setText(username);
         return root;
     }
 
