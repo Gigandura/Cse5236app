@@ -13,7 +13,7 @@ public class User {
     private String username;
     private String password;
     private String description;
-//    private HashMap<String, Movie> myList;
+    private List<Movie> myList;
     private String image;
 
     public User() {
@@ -47,13 +47,13 @@ public class User {
         this.password = password;
     }
 
-//    public HashMap<String, Movie> getMyList() {
-//        return myList;
-//    }
-//
-//    public void setMyList(HashMap<String, Movie> myList) {
-//        this.myList = myList;
-//    }
+    public List<Movie> getMyList() {
+        return myList;
+    }
+
+    public void setMyList(List<Movie> myList) {
+        this.myList = myList;
+    }
 
     public String getImage() {
         return this.image;
