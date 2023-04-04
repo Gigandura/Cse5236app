@@ -95,7 +95,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                             newFragment.show(getActivity().getSupportFragmentManager(), "Login Fragment");
                         }
                     } catch (Exception e) {
-                        Log.e("Login Fragment" , "No users in database with that userID");
+                        Log.e("Login Fragment" , e.toString());
                     }
 
                 }

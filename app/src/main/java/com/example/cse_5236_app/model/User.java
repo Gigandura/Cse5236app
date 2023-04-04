@@ -2,6 +2,8 @@ package com.example.cse_5236_app.model;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @IgnoreExtraProperties
@@ -11,7 +13,7 @@ public class User {
     private String username;
     private String password;
     private String description;
-//    private List<Movie> myList;
+//    private HashMap<String, Movie> myList;
     private String image;
 
     public User() {
@@ -45,11 +47,11 @@ public class User {
         this.password = password;
     }
 
-//    public List<Movie> getMyList() {
+//    public HashMap<String, Movie> getMyList() {
 //        return myList;
 //    }
-
-//    public void setMyList(List<Movie> myList) {
+//
+//    public void setMyList(HashMap<String, Movie> myList) {
 //        this.myList = myList;
 //    }
 

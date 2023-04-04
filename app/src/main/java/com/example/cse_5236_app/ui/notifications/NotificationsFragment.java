@@ -141,7 +141,6 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
         Log.v("Notification Fragment", username);
         ImageView profilePic = root.findViewById(R.id.imageView);
 
-        //TODO make buttons work.
         Button deleteProf = root.findViewById(R.id.del_button);
         Button changePass = root.findViewById(R.id.change_pass_button);
         Button changePic = root.findViewById(R.id.change_pic_button);
