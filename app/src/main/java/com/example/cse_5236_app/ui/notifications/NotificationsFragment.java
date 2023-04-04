@@ -1,21 +1,32 @@
 package com.example.cse_5236_app.ui.notifications;
 
+import android.content.ActivityNotFoundException;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +36,8 @@ import com.example.cse_5236_app.model.User;
 import com.example.cse_5236_app.ui.Login.LoginActivity;
 import com.example.cse_5236_app.ui.MainActivity;
 import com.example.cse_5236_app.ui.dashboard.DashboardActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.database.DataSnapshot;
@@ -32,6 +45,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class NotificationsFragment extends DialogFragment implements View.OnClickListener {
@@ -39,9 +60,42 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
     private FragmentNotificationsBinding binding;
 
     private String userid;
+    private User user;
 
     private FirebaseDatabase fd;
     private SharedPreferences sharedPref;
+
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            uri -> {
+                // Handle the returned Uri
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                StorageReference fileRef = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
+                fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(getContext(), "Uploading succeeded", Toast.LENGTH_SHORT).show();
+                        Log.v("Notification Fragment","upload success");
+                        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                user.setImageUri(uri.toString());
+                                fd.getReference().child("users").child(user.getUsername()).setValue(user);
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Notification Fragment", "failure to upload picture");
+                    }
+                });
+            });;
+
+    private String getFileExtension(Uri uri) {
+        ContentResolver cr = getContext().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(uri));
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +165,7 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
                     {
                         Log.v("Notification Fragment", dataSnapshot.toString());
                         try {
-                            User user = dataSnapshot.getValue(User.class);
+                            user = dataSnapshot.getValue(User.class);
                             Log.v("Notification Fragment", user.toString());
                             if (user.getImage() == null) {
                                 Glide.with(context).load(getString(R.string.profile_uri_default)).into(profilePic);
@@ -156,11 +210,16 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
         } else if (v.getId() == R.id.change_pass_button) {
             DialogFragment dialogFragment = new NotificationDialogPassword(username);
             dialogFragment.show(getActivity().getSupportFragmentManager(), "Notification Fragment Pass");
-//            fdRef.child("users").child(username).child("password").setValue(temp);
         } else if (v.getId() == R.id.change_desc_button) {
             DialogFragment dialogFragment = new NotificationDialogDesc(username);
             dialogFragment.show(getActivity().getSupportFragmentManager(), "Notification Fragment Desc");
         } else if (v.getId() == R.id.change_pic_button) {
+            try {
+                mGetContent.launch("image/*");
+            }
+            catch (ActivityNotFoundException e) {
+                Log.e("Notification Fragment", "Error in picture");
+            }
 
         } else {
             Log.e("Login Fragment", "Bad button input");
@@ -168,10 +227,13 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
 
     }
 
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
+
 
 }

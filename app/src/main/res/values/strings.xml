@@ -33,5 +33,6 @@
     <string name="dialog_new_pass">Please enter a new password</string>
     <string name="dialog_new_desc">Please enter a new description</string>
     <string name="error_loading_data">There was an error loading your data</string>
+    <string name="upload_photo">Upload a photo</string>
 
 </resources>
