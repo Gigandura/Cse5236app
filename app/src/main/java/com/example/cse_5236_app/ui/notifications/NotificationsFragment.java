@@ -78,8 +78,8 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
                         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                user.setImageUri(uri.toString());
-                                fd.getReference().child("users").child(user.getUsername()).setValue(user);
+//                                user.setImageUri(uri.toString());
+                                fd.getReference().child("users").child(user.getUsername()).child("image").setValue(uri.toString());
                             }
                         });
                     }
