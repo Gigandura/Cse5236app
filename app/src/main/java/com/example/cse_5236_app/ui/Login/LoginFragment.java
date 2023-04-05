@@ -75,6 +75,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
             String usernameText = username.getText().toString();
             String passwordText = password.getText().toString();
             Intent intent = new Intent(v.getContext(), MainActivity.class);
+            intent.putExtra("userid", userId);
             DatabaseReference usernameRef = mDatabase.child("users").child(usernameText);
             usernameRef.addValueEventListener(new ValueEventListener() {
                 @Override
