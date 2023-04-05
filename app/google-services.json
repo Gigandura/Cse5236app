@@ -1,7 +1,10 @@
 {
   "project_info": {
     "project_number": "827233743741",
+<<<<<<< HEAD
+=======
     "firebase_url": "https://cse5236app-default-rtdb.firebaseio.com",
+>>>>>>> 12c1abe9db28977f1869deafbfcda2c3b8e80438
     "project_id": "cse5236app",
     "storage_bucket": "cse5236app.appspot.com"
   },
