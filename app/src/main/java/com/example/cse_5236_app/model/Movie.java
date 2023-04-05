@@ -99,6 +99,9 @@ public class Movie implements Parcelable {
 
     private String original_language;
 
+    public Movie () {
+
+    }
     @Override
     public String toString() {
         return "Movie{" +

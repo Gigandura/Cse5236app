@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cse_5236_app.R;
 import com.example.cse_5236_app.databinding.FragmentHomeBinding;
+import com.example.cse_5236_app.model.Movie;
 import com.example.cse_5236_app.model.User;
 import com.example.cse_5236_app.ui.dashboard.MovieRecyclerView;
 import com.example.cse_5236_app.ui.dashboard.OnClickMovieListener;
@@ -28,6 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeFragment extends Fragment implements OnClickMovieListener {
 
     private FragmentHomeBinding binding;
@@ -36,9 +40,6 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
 
     private SharedPreferences sharedPref;
     private MovieRecyclerView adapter;
-
-    private User user;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -57,26 +58,24 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
         adapter = new MovieRecyclerView(this);
-        mDatabase.child("users").child(username).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(
-                            @NonNull DataSnapshot dataSnapshot)
-                    {
-                        Log.v("Home Fragment", dataSnapshot.toString());
-                        try {
-                            user = dataSnapshot.getValue(User.class);
-                            adapter.setmMovies(user.getMyList());
-                        }
-                        catch (Exception e) {
-                            Log.e("Notification Fragment", e.toString());
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Notification Fragment", "Picture Database error");
-                    }
-                });
+        DatabaseReference movieList = mDatabase.child("users").child(username).child("myList");
+        movieList.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Movie> userList = new ArrayList<>();
+                Log.d("Login", snapshot.toString());
+                for(DataSnapshot ds : snapshot.getChildren()) {
+                    Movie movie = ds.getValue(Movie.class);
+                    userList.add(movie);
+
+                }
+                adapter.setmMovies(userList);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Login Fragment", error.getMessage());
+            }
+        });
 
         recyclerView.setAdapter(adapter);
 

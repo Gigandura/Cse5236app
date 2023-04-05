@@ -20,6 +20,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cse_5236_app.databinding.MovieItemBinding;
+import com.example.cse_5236_app.model.Movie;
 import com.example.cse_5236_app.model.User;
 import com.example.cse_5236_app.ui.MainActivity;
 import com.example.cse_5236_app.R;
@@ -34,6 +36,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginFragment extends DialogFragment implements View.OnClickListener {
 
@@ -71,15 +75,13 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
             String usernameText = username.getText().toString();
             String passwordText = password.getText().toString();
             Intent intent = new Intent(v.getContext(), MainActivity.class);
-            mDatabase.child("users").child(userId).get().addOnCompleteListener(task -> {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+            DatabaseReference usernameRef = mDatabase.child("users").child(usernameText);
+            usernameRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
                     try {
                         Log.v("LoginFragment", usernameText);
-                        User testing = task.getResult().getValue(User.class);
+                        User testing = snapshot.getValue(User.class);
                         Log.v("LoginFragment", testing.getPassword() + " " + usernameText);
                         if (testing.getUsername().equals(usernameText) && testing.getPassword().equals(passwordText)) {
                             // Correct username and password path
@@ -97,7 +99,11 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                     } catch (Exception e) {
                         Log.e("Login Fragment" , e.toString());
                     }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Login Fragment", error.getMessage());
                 }
             });
 
