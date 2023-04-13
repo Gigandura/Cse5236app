@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -48,6 +49,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     protected EditText username;
     protected EditText password;
     private DatabaseReference mDatabase;
+    private boolean connectedToDatabase;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,56 +67,84 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
 
         login.setOnClickListener(this);
         newuserb.setOnClickListener(this);
+        DatabaseReference databaseReference = mDatabase.child(".info/connected");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    connectedToDatabase = true;
+                }else {
+                    connectedToDatabase = false;
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+            }
+        });
         return v;
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.login_button) {
-            String userId = username.getText().toString();
-            String usernameText = username.getText().toString();
-            String passwordText = password.getText().toString();
-            Intent intent = new Intent(v.getContext(), MainActivity.class);
-            intent.putExtra("userid", userId);
-            DatabaseReference usernameRef = mDatabase.child("users").child(usernameText);
-            usernameRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    try {
-                        Log.v("LoginFragment", usernameText);
-                        User testing = snapshot.getValue(User.class);
-                        Log.v("LoginFragment", testing.getPassword() + " " + usernameText);
-                        if (testing.getUsername().equals(usernameText) && testing.getPassword().equals(passwordText)) {
-                            // Correct username and password path
-                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString(getString(R.string.saved_username_key), usernameText);
-                            editor.apply();
-                            Log.v("Login Fragment", "Written to shared storage");
-                            startActivity(intent);
-                        } else {
-                            // Wrong username or password path
-                            DialogFragment newFragment = new LoginFragment();
-                            newFragment.show(getActivity().getSupportFragmentManager(), "Login Fragment");
-                        }
-                    } catch (Exception e) {
-                        Log.e("Login Fragment" , e.toString());
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Login Fragment", error.getMessage());
-                }
-            });
-
+            if (connectedToDatabase) {
+                loginFunction(v);
+            }else {
+                Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+            }
         } else if (v.getId() == R.id.new_user_button) {
-            writeNewUser(username.getText().toString(), username.getText().toString()
-                    , password.getText().toString());
+            if (connectedToDatabase) {
+                writeNewUser(username.getText().toString(), username.getText().toString()
+                        , password.getText().toString());
+            }else {
+                Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Log.e("Login Fragment", "Bad button input");
         }
+    }
 
+    private void loginFunction(View v) {
+        String userId = username.getText().toString();
+        String usernameText = username.getText().toString();
+        String passwordText = password.getText().toString();
+        Intent intent = new Intent(v.getContext(), MainActivity.class);
+        intent.putExtra("userid", userId);
+        DatabaseReference usernameRef = mDatabase.child("users").child(usernameText);
+        usernameRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    Log.v("LoginFragment", usernameText);
+                    User testing = snapshot.getValue(User.class);
+                    Log.v("LoginFragment", testing.getPassword() + " " + usernameText);
+                    if (testing.getUsername().equals(usernameText) && testing.getPassword().equals(passwordText)) {
+                        // Correct username and password path
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(getString(R.string.saved_username_key), usernameText);
+                        editor.apply();
+                        Log.v("Login Fragment", "Written to shared storage");
+                        startActivity(intent);
+                    } else {
+                        // Wrong username or password path
+                        DialogFragment newFragment = new LoginFragment();
+                        newFragment.show(getActivity().getSupportFragmentManager(), "Login Fragment");
+                    }
+                } catch (Exception e) {
+                    Log.e("Login Fragment", e.toString());
+                    Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Login Fragment", error.getMessage());
+                Toast.makeText(getContext(),"Something went wrong", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -125,7 +155,6 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
 
     public void writeNewUser(String userId, String name, String password) {
         User user = new User(name, password);
-
         mDatabase.child("users").child(userId).setValue(user);
     }
 
