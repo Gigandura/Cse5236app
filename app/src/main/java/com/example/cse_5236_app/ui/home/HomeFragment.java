@@ -63,7 +63,7 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Movie> userList = new ArrayList<>();
-                Log.d("Home Fragment", snapshot.toString());
+//                Log.d("Home Fragment", snapshot.toString());
                 for(DataSnapshot ds : snapshot.getChildren()) {
                     Movie movie = ds.getValue(Movie.class);
                     userList.add(movie);

@@ -69,12 +69,9 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Toast.makeText(getContext(), "Uploading succeeded", Toast.LENGTH_SHORT).show();
                         Log.v("Notification Fragment","upload success");
-                        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
+                        fileRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
 //                                user.setImageUri(uri.toString());
-                                fd.getReference().child("users").child(user.getUsername()).child("image").setValue(uri.toString());
-                            }
+                            fd.getReference().child("users").child(user.getUsername()).child("image").setValue(uri1.toString());
                         });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
