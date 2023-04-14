@@ -63,17 +63,16 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Movie> userList = new ArrayList<>();
-                Log.d("Login", snapshot.toString());
+                Log.d("Home Fragment", snapshot.toString());
                 for(DataSnapshot ds : snapshot.getChildren()) {
                     Movie movie = ds.getValue(Movie.class);
                     userList.add(movie);
-
                 }
                 adapter.setmMovies(userList);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Login Fragment", error.getMessage());
+                Log.e("Home Fragment", error.getMessage());
             }
         });
 
@@ -103,7 +102,7 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
             startActivity(intent);
         }
         catch (Exception e) {
-            Log.e("HomeFragment", "Something bad happened");
+            Log.e("Home Fragment", "Something bad happened");
         }
 
     }

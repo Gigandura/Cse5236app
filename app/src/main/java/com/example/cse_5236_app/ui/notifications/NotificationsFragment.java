@@ -52,11 +52,13 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
 
     private FirebaseDatabase fd;
     private SharedPreferences sharedPref;
+    private boolean connectedToDb;
 
     ImageView profilePic;
     TextView userNameText;
     TextView userDesc;
 
+    DatabaseReference connection;
     ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
             uri -> {
                 // Handle the returned Uri
@@ -143,23 +145,25 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
 
         fd = FirebaseDatabase.getInstance();
         getFirebaseConnection();
-
         return root;
     }
 
     private void getFirebaseConnection() {
-        DatabaseReference databaseReference = fd.getReference().child(".info/connected");
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        connection = fd.getReference().child(".info/connected");
+        connection.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
+                if (snapshot.getValue(Boolean.class)) {
                     loadUser();
-                }else {
-                    Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+                    connectedToDb = true;
+                } else {
+                    if (connectedToDb) {
+                        Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+                        connectedToDb = false;
+                    }
+
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
@@ -209,10 +213,10 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
                     public void onDataChange(
                             @NonNull DataSnapshot dataSnapshot)
                     {
-                        Log.v("Notification Fragment", dataSnapshot.toString());
+//                        Log.v("Notification Fragment", dataSnapshot.toString());
                         try {
                             user = dataSnapshot.getValue(User.class);
-                            Log.v("Notification Fragment", user.toString());
+//                            Log.v("Notification Fragment", user.toString());
                             if (user.getImage() == null) {
                                 Glide.with(context).load(getString(R.string.profile_uri_default)).into(profilePic);
                             }

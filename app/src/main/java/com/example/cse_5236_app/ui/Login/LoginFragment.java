@@ -72,11 +72,7 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean connected = snapshot.getValue(Boolean.class);
-                if (connected) {
-                    connectedToDatabase = true;
-                }else {
-                    connectedToDatabase = false;
-                }
+                connectedToDatabase = connected;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
