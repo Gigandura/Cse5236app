@@ -35,5 +35,8 @@
     <string name="no_description">Please enter a description using the button below!</string>
     <string name="error_loading_data">There was an error loading your data…</string>
     <string name="upload_photo">Upload a photo</string>
+    <string name="saved_password_key">password</string>
+    <string name="saved_description_key">desc</string>
+    <string name="saved_img_link">image</string>
 
 </resources>

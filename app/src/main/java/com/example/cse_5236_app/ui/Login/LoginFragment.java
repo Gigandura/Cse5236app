@@ -50,6 +50,8 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     protected EditText password;
     private DatabaseReference mDatabase;
     private boolean connectedToDatabase;
+    DatabaseReference usernameRef;
+    ValueEventListener frank;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,18 +69,19 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
 
         login.setOnClickListener(this);
         newuserb.setOnClickListener(this);
+
         DatabaseReference databaseReference = mDatabase.child(".info/connected");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                boolean connected = snapshot.getValue(Boolean.class);
-                connectedToDatabase = connected;
+                connectedToDatabase = snapshot.getValue(Boolean.class);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
             }
         });
+
         return v;
     }
 
@@ -108,8 +111,8 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
         String passwordText = password.getText().toString();
         Intent intent = new Intent(v.getContext(), MainActivity.class);
         intent.putExtra("userid", userId);
-        DatabaseReference usernameRef = mDatabase.child("users").child(usernameText);
-        usernameRef.addValueEventListener(new ValueEventListener() {
+        usernameRef = mDatabase.child("users").child(usernameText);
+        usernameRef.addValueEventListener(frank = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try {
@@ -121,6 +124,9 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString(getString(R.string.saved_username_key), usernameText);
+                        editor.putString(getString(R.string.saved_password_key), testing.getPassword());
+                        editor.putString(getString(R.string.saved_description_key), testing.getDescription());
+                        editor.putString(getString(R.string.saved_img_link), testing.getImage());
                         editor.apply();
                         Log.v("Login Fragment", "Written to shared storage");
                         startActivity(intent);
@@ -147,6 +153,16 @@ public class LoginFragment extends DialogFragment implements View.OnClickListene
     public void onDestroyView() {
         super.onDestroyView();
         Log.v("Login Fragment", "On Destroy View Method");
+
+    }
+
+    @Override
+    public void onStop() {
+        if (usernameRef != null) {
+            usernameRef.removeEventListener(frank);
+        }
+        Log.v("Login Fragment", "On Stop Method");
+        super.onStop();
     }
 
     public void writeNewUser(String userId, String name, String password) {

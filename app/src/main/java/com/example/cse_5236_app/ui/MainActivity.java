@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().hasExtra("userid")) {
             userid = getIntent().getStringExtra("userid");
             Log.v("MainActivity","incoming intent: " + userid);
-
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());

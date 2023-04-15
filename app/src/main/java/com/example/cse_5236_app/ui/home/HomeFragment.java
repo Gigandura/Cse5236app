@@ -36,9 +36,6 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
 
     private FragmentHomeBinding binding;
 
-    private RecyclerView recyclerView;
-
-    private SharedPreferences sharedPref;
     private MovieRecyclerView adapter;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,13 +45,13 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String defaultUsername = "Error";
         String username = sharedPref.getString(getString(R.string.saved_username_key), defaultUsername);
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        recyclerView = root.findViewById(R.id.postsRV);
+        RecyclerView recyclerView = root.findViewById(R.id.postsRV);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
         adapter = new MovieRecyclerView(this);
@@ -85,6 +82,7 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
 
     @Override
     public void onDestroyView() {
+        Log.v("Home Fragment", "On Destroy View");
         super.onDestroyView();
         binding = null;
     }

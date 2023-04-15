@@ -71,7 +71,7 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
                         Log.v("Notification Fragment","upload success");
                         fileRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
 //                                user.setImageUri(uri.toString());
-                            fd.getReference().child("users").child(user.getUsername()).child("image").setValue(uri1.toString());
+                            fd.getReference().child("users").child(userid).child("image").setValue(uri1.toString());
                         });
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -142,6 +142,7 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
 
         fd = FirebaseDatabase.getInstance();
         getFirebaseConnection();
+        loadUser();
         return root;
     }
 
@@ -151,11 +152,10 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.getValue(Boolean.class)) {
-                    loadUser();
                     connectedToDb = true;
                 } else {
                     if (connectedToDb) {
-                        Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+                        makeMessage();
                         connectedToDb = false;
                     }
 
@@ -163,33 +163,57 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+                makeMessage();
             }
         });
     }
 
+    public void makeMessage() {
+        Toast.makeText(getContext(),"No connection to the database", Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void onClick(View v) {
         String defaultUsername = "Error";
         String username = sharedPref.getString(getString(R.string.saved_username_key), defaultUsername);
         DatabaseReference fdRef = fd.getReference();
+        setListenerForData();
         if (v.getId() == R.id.del_button) {
-            Intent toLogin = new Intent(v.getContext(), LoginActivity.class);
-            fdRef.child("users").child(username).removeValue();
-            startActivity(toLogin);
+            if (connectedToDb) {
+                Intent toLogin = new Intent(v.getContext(), LoginActivity.class);
+                fdRef.child("users").child(username).removeValue();
+                startActivity(toLogin);
+            } else {
+                makeMessage();
+            }
         } else if (v.getId() == R.id.change_pass_button) {
-            DialogFragment dialogFragment = new NotificationDialogPassword(username);
-            dialogFragment.show(getActivity().getSupportFragmentManager(), "Notification Fragment Pass");
+            if (connectedToDb) {
+                DialogFragment dialogFragment = new NotificationDialogPassword(username);
+                dialogFragment.show(getActivity().getSupportFragmentManager(), "Notification Fragment Pass");
+            }else {
+                makeMessage();
+            }
         } else if (v.getId() == R.id.change_desc_button) {
-            DialogFragment dialogFragment = new NotificationDialogDesc(username);
-            dialogFragment.show(getActivity().getSupportFragmentManager(), "Notification Fragment Desc");
+            if (connectedToDb) {
+                DialogFragment dialogFragment = new NotificationDialogDesc(username);
+                dialogFragment.show(getActivity().getSupportFragmentManager(), "Notification Fragment Desc");
+            }
+            else {
+                makeMessage();
+            }
+
         } else if (v.getId() == R.id.change_pic_button) {
-            try {
-                mGetContent.launch("image/*");
+            if (connectedToDb) {
+                try {
+                    mGetContent.launch("image/*");
+                }
+                catch (ActivityNotFoundException e) {
+                    Log.e("Notification Fragment", "Error in picture");
+                }
             }
-            catch (ActivityNotFoundException e) {
-                Log.e("Notification Fragment", "Error in picture");
+            else {
+                makeMessage();
             }
+
 
         } else {
             Log.e("Login Fragment", "Bad button input");
@@ -201,50 +225,61 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String defaultUsername = "Error";
         String username = sharedPref.getString(getString(R.string.saved_username_key), defaultUsername);
+        userid = username;
+        String description = sharedPref.getString(getString(R.string.saved_description_key), getString(R.string.no_description));
+        String image = sharedPref.getString(getString(R.string.saved_img_link), getString(R.string.profile_uri_default));
         Log.v("Notification Fragment", username);
-        DatabaseReference getImage = fd.getReference();
         Context context = getContext();
-        getImage.child("users").child(username).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(
-                            @NonNull DataSnapshot dataSnapshot)
-                    {
-//                        Log.v("Notification Fragment", dataSnapshot.toString());
-                        try {
-                            user = dataSnapshot.getValue(User.class);
-//                            Log.v("Notification Fragment", user.toString());
-                            if (user.getImage() == null) {
-                                Glide.with(context).load(getString(R.string.profile_uri_default)).into(profilePic);
-                            }
-                            else {
-                                Glide.with(context).load(user.getImage()).into(profilePic);
-                            }
-                            if (user.getUsername() == null) {
-                                userNameText.setText(getString(R.string.error_loading_data));
-                            } else {
-                                userNameText.setText(username);
-                            }
-                            if (user.getDescription() == null) {
-                                userDesc.setText(getString(R.string.no_description));
-                            } else {
-                                userDesc.setText(user.getDescription());
-                            }
-                            Log.v("Notification Fragment", "Picture Loaded");
-                        }
-                        catch (Exception e) {
-                            Log.e("Notification Fragment", e.toString());
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Notification Fragment", "Picture Database error");
-                    }
-                });
+        Glide.with(context).load(image).into(profilePic);
+        userNameText.setText(username);
+        userDesc.setText(description);
+        Log.v("Notification Fragment", "Picture Loaded");
+    }
 
+    public void setListenerForData() {
+        Context context = getContext();
+        DatabaseReference getImage = fd.getReference();
+            getImage.child("users").child(userid).addValueEventListener(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(
+                                @NonNull DataSnapshot dataSnapshot)
+                        {
+//                        Log.v("Notification Fragment", dataSnapshot.toString());
+                            try {
+                                user = dataSnapshot.getValue(User.class);
+//                            Log.v("Notification Fragment", user.toString());
+                                if (user.getImage() == null) {
+                                    Glide.with(context).load(getString(R.string.profile_uri_default)).into(profilePic);
+                                }
+                                else {
+                                    Glide.with(context).load(user.getImage()).into(profilePic);
+                                }
+                                if (user.getUsername() == null) {
+                                    userNameText.setText(getString(R.string.error_loading_data));
+                                } else {
+                                    userNameText.setText(userid);
+                                }
+                                if (user.getDescription() == null) {
+                                    userDesc.setText(getString(R.string.no_description));
+                                } else {
+                                    userDesc.setText(user.getDescription());
+                                }
+                                Log.v("Notification Fragment", "Picture Loaded");
+                            }
+                            catch (Exception e) {
+                                Log.e("Notification Fragment", e.toString());
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("Notification Fragment", "Picture Database error");
+                        }
+                    });
     }
     @Override
     public void onDestroyView() {
+        Log.v("Notifications Fragment", "On Destroy View");
         super.onDestroyView();
         binding = null;
     }
