@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import com.bumptech.glide.Glide;
 import com.example.cse_5236_app.R;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             userid = getIntent().getStringExtra("userid");
             Log.v("MainActivity","incoming intent: " + userid);
         }
-
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         // Initialize and assign variable

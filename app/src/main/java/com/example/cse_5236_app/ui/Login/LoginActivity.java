@@ -2,6 +2,7 @@ package com.example.cse_5236_app.ui.Login;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Window;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -17,7 +18,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.v("LoginActivity", "LoginActivity OnCreate");
         setContentView(R.layout.activity_login);
-
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container_login);
         if (fragment == null) {

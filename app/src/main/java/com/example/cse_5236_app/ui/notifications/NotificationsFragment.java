@@ -1,5 +1,6 @@
 package com.example.cse_5236_app.ui.notifications;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -33,6 +35,7 @@ import com.example.cse_5236_app.ui.dashboard.DashboardActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -46,6 +49,7 @@ import com.google.firebase.storage.UploadTask;
 public class NotificationsFragment extends DialogFragment implements View.OnClickListener {
 
     private FragmentNotificationsBinding binding;
+    private FragmentNotificationsBinding bindingL;
 
     private String userid;
     private User user;
@@ -80,7 +84,7 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
                         Log.e("Notification Fragment", "failure to upload picture");
                     }
                 });
-            });;
+            });
 
     private String getFileExtension(Uri uri) {
         ContentResolver cr = getContext().getContentResolver();
@@ -91,9 +95,18 @@ public class NotificationsFragment extends DialogFragment implements View.OnClic
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
+//        View v;
+        Activity activity = requireActivity();
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+//        if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+//            v = inflater.inflate(R.layout.fragment_notifications, container, false);
+//        } else {
+//            v = inflater.inflate(R.layout.fragment_notifications, container, false);
+//        }
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        BottomNavigationView bottomNavigationView=getActivity().findViewById(R.id.nav_view);
+
+        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.nav_view);
         bottomNavigationView.setSelectedItemId(R.id.navigation_notifications);
 
         // Perform item selected listener

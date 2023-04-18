@@ -1,11 +1,13 @@
 package com.example.cse_5236_app.ui.home;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -42,8 +44,16 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
         HomeViewModel homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        View v;
+        Activity activity = requireActivity();
+        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+            v = inflater.inflate(R.layout.fragment_home, container, false);
+        } else {
+            v = inflater.inflate(R.layout.fragment_home, container, false);
+        }
+//        binding = FragmentHomeBinding.inflate(inflater, container, false);
+//        View root = binding.getRoot();
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String defaultUsername = "Error";
@@ -51,9 +61,13 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        RecyclerView recyclerView = root.findViewById(R.id.postsRV);
+        RecyclerView recyclerView = v.findViewById(R.id.postsRV);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext(), LinearLayoutManager.HORIZONTAL, false));
+        } else {
+            recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
+        }
         adapter = new MovieRecyclerView(this);
         DatabaseReference movieList = mDatabase.child("users").child(username).child("myList");
         movieList.addValueEventListener(new ValueEventListener() {
@@ -75,7 +89,7 @@ public class HomeFragment extends Fragment implements OnClickMovieListener {
 
         recyclerView.setAdapter(adapter);
 
-        return root;
+        return v;
     }
 
 

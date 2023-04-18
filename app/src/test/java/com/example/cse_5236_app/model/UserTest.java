@@ -27,4 +27,9 @@ public class UserTest {
     public void getDescription() {
         assertEquals("description", user.getDescription());
     }
+
+    @Test
+    public void failure() {
+        assertEquals("test", user.getDescription());
+    }
 }

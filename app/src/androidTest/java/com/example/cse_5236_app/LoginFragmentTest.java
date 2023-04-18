@@ -70,9 +70,11 @@ public class LoginFragmentTest {
         // Find the email and password fields, and enter valid credentials
         Espresso.onView(ViewMatchers.withId(R.id.username_text)).perform(ViewActions.typeText("testNewUser"));
         Espresso.onView(ViewMatchers.withId(R.id.password_text)).perform(ViewActions.typeText("12345"));
+        Espresso.closeSoftKeyboard();
 
         // Click the login button
         Espresso.onView(ViewMatchers.withId(R.id.new_user_button)).perform(ViewActions.click());
+
 
         // Check if the login screen is displayed
         Espresso.onView(ViewMatchers.withId(R.id.login_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
